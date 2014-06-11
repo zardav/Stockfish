@@ -623,7 +623,7 @@ namespace {
     if (!b || pos.non_pawn_material(~us))
         return SCORE_ZERO;
 
-    return Unstoppable * int(relative_rank(us, frontmost_sq(us, b)));
+    return Unstoppable * (int(relative_rank(us, frontmost_sq(us, b))) - 1);
   }
 
 
