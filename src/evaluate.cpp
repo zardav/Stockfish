@@ -533,11 +533,12 @@ namespace {
 
     const Color Them = (Us == WHITE ? BLACK : WHITE);
 
-    Bitboard b, squaresToQueen, defendedSquares, unsafeSquares;
+    Bitboard b, squaresToQueen, defendedSquares, unsafeSquares, ourPawns;
     Score score = SCORE_ZERO;
 
     b = ei.pi->passed_pawns(Us);
 
+	ourPawns = pos.pieces(Us, PAWN);
     while (b)
     {
         Square s = pop_lsb(&b);
@@ -549,6 +550,9 @@ namespace {
 
         // Base bonus based on rank
         Value mbonus = Value(17 * rr), ebonus = Value(7 * (rr + r + 1));
+
+		if( (file_bb(s + DELTA_E) & ourPawns) || (file_bb(s + DELTA_W) & ourPawns))
+			mbonus += 2;
 
         if (rr)
         {
