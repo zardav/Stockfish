@@ -623,7 +623,7 @@ namespace {
     if (!b || pos.non_pawn_material(~us))
         return SCORE_ZERO;
 
-    return Unstoppable * (int(relative_rank(us, frontmost_sq(us, b))) - 1);
+    return Unstoppable * int(relative_rank(us, frontmost_sq(us, b)));
   }
 
 
@@ -717,9 +717,10 @@ namespace {
             - evaluate_passed_pawns<BLACK, Trace>(pos, ei);
 
     // If one side has only a king, score for potential unstoppable pawns
-    if (!pos.non_pawn_material(WHITE) || !pos.non_pawn_material(BLACK))
-        score +=  evaluate_unstoppable_pawns(pos, WHITE, ei)
-                - evaluate_unstoppable_pawns(pos, BLACK, ei);
+    if (!pos.non_pawn_material(WHITE))
+        score +=  evaluate_unstoppable_pawns(pos, BLACK, ei);
+	if(!pos.non_pawn_material(BLACK))
+        score -= evaluate_unstoppable_pawns(pos, WHITE, ei);
 
     // Evaluate space for both sides, only in middlegame
     if (ei.mi->space_weight())
