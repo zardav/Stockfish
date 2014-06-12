@@ -599,7 +599,7 @@ namespace {
 				
 					// If the some squares to queen are defended by a pawn add more small bonus.
 					if(ei.attackedBy[Us][PAWN] & squaresToQueen)
-						k += 2;
+						k += 1;
 				}
 
                 mbonus += k * rr, ebonus += k * rr;
