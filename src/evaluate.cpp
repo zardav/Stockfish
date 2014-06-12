@@ -509,11 +509,12 @@ namespace {
         b = weakEnemies & (ei.attackedBy[Us][PAWN] | ei.attackedBy[Us][KNIGHT] | ei.attackedBy[Us][BISHOP]);
         if (b)
             score += Threat[0][type_of(pos.piece_on(lsb(b)))];
-
-        b = weakEnemies & (ei.attackedBy[Us][ROOK] | ei.attackedBy[Us][QUEEN]);
-        if (b)
-            score += Threat[1][type_of(pos.piece_on(lsb(b)))];
-
+		else
+		{
+			b = weakEnemies & (ei.attackedBy[Us][ROOK] | ei.attackedBy[Us][QUEEN]);
+			if (b)
+			    score += Threat[1][type_of(pos.piece_on(lsb(b)))];
+		}
         b = weakEnemies & ~ei.attackedBy[Them][ALL_PIECES];
         if (b)
             score += more_than_one(b) ? Hanging * popcount<Max15>(b) : Hanging;
