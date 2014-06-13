@@ -572,7 +572,8 @@ namespace {
                 // the squares in the pawn's path attacked or occupied by the enemy.
 				Bitboard b = forward_bb(Them, s) & pos.pieces(Them, ROOK, QUEEN);
                 if (    unlikely(b)
-					&& (b & pos.attacks_from<ROOK>(s) & ~ei.attackedBy[Us][ALL_PIECES]))
+					&& (b & pos.attacks_from<ROOK>(s))
+					&& (forward_bb(Them, s) & ei.attackedBy[Us][ALL_PIECES]) != forward_bb(Them, s))
                     unsafeSquares = squaresToQueen;
                 else
                     unsafeSquares = squaresToQueen & (ei.attackedBy[Them][ALL_PIECES] | pos.pieces(Them));
