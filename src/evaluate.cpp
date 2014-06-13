@@ -243,21 +243,17 @@ namespace {
     // Initial bonus based on square
     Value bonus = Outpost[Pt == BISHOP][relative_square(Us, s)];
 
-	// The next bonuses are relevent only if there is no pawn to drop us
-	if ( !( forward_bb(Us, s + DELTA_E) & forward_bb(Us, s + DELTA_W) & pos.pieces(Them, PAWN) )  )
-	{
-
-		// Increase bonus if supported by pawn, especially if the opponent has
-		// no minor piece which can trade with the outpost piece.
-		if (bonus && (ei.attackedBy[Us][PAWN] & s))
-		{
-		    if (   !pos.pieces(Them, KNIGHT)
-		        && !(squares_of_color(s) & pos.pieces(Them, BISHOP)))
-		        bonus += bonus + bonus / 2;
-		   else
-		        bonus += bonus / 2;
-		}
-	}
+    // Increase bonus if supported by pawn, especially if the opponent has
+    // no minor piece which can trade with the outpost piece.
+    if (bonus && (ei.attackedBy[Us][PAWN] & s))
+    {
+		if ( (SquareBB[s] & (ei.attackedBy[Us][KNIGHT] | ei.attackedBy[Us][BISHOP])) 
+			|| ( !pos.pieces(Them, KNIGHT)
+            && !(squares_of_color(s) & pos.pieces(Them, BISHOP))))
+            bonus += bonus + bonus / 2;
+        else
+            bonus += bonus / 2;
+    }
 
     return make_score(bonus, bonus);
   }
