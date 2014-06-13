@@ -718,9 +718,9 @@ namespace {
 
     // If one side has only a king, score for potential unstoppable pawns
     if (!pos.non_pawn_material(WHITE))
-        score +=  evaluate_unstoppable_pawns(pos, BLACK, ei);
+        score +=  evaluate_unstoppable_pawns(pos, WHITE, ei);
 	if(!pos.non_pawn_material(BLACK))
-        score -= evaluate_unstoppable_pawns(pos, WHITE, ei);
+        score -= evaluate_unstoppable_pawns(pos, BLACK, ei);
 
     // Evaluate space for both sides, only in middlegame
     if (ei.mi->space_weight())
