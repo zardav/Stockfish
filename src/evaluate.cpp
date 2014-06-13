@@ -563,7 +563,7 @@ namespace {
                 ebonus -= square_distance(pos.king_square(Us), blockSq + pawn_push(Us)) * rr;
 
             // If the pawn is free to advance, then increase the bonus
-            if (pos.empty(blockSq))
+			if ( !(pos.pieces(Them, ALL_PIECES) & s) )
             {
                 squaresToQueen = forward_bb(Us, s);
 
@@ -584,16 +584,18 @@ namespace {
 
                 // If there aren't any enemy attacks, assign a big bonus. Otherwise
                 // assign a smaller bonus if the block square isn't attacked.
-                int k = !unsafeSquares ? 15 : !(unsafeSquares & blockSq) ? 9 : 0;
+                int k = !unsafeSquares ? 7 : !(unsafeSquares & blockSq) ? 4 : 0;
 
                 // If the path to queen is fully defended, assign a big bonus.
                 // Otherwise assign a smaller bonus if the block square is defended.
                 if (defendedSquares == squaresToQueen)
-                    k += 6;
+                    k += 3;
 
                 else if (defendedSquares & blockSq)
-                    k += 4;
+                    k += 2;
 
+				if(!(pos.pieces(Us, ALL_PIECES) & s))
+					k *= 2;
                 mbonus += k * rr, ebonus += k * rr;
             }
         } // rr != 0
