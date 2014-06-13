@@ -592,10 +592,10 @@ namespace {
 				    k += 6;
 	
 				else if (defendedSquares & blockSq)
-				    k += 3;
+				    k += 4;
 			
 				// If the block square is defended by a pawn add more small bonus.
-				if(ei.attackedBy[Us][PAWN] & blockSq)
+				if(ei.attackedBy[Us][PAWN] & squaresToQueen)
 					k += 1;
 
                 mbonus += k * rr, ebonus += k * rr;
