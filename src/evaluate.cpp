@@ -571,8 +571,8 @@ namespace {
                 // add all X-ray attacks by the rook or queen. Otherwise consider only
                 // the squares in the pawn's path attacked or occupied by the enemy.
 				Bitboard b = forward_bb(Them, s) & pos.pieces(Them, ROOK, QUEEN),
-							 attacked = ei.attackedBy[Us][BISHOP] & ei.attackedBy[Us][KNIGHT] &
-										ei.attackedBy[Us][PAWN] & ei.attackedBy[Us][ROOK];
+							 attacked = ei.attackedBy[Us][BISHOP] | ei.attackedBy[Us][KNIGHT] |
+										ei.attackedBy[Us][PAWN] | ei.attackedBy[Us][ROOK];
                 if (    unlikely(b)
 					&& (b & pos.attacks_from<ROOK>(s))
 					&& (forward_bb(Them, s) & attacked) != forward_bb(Them, s))
@@ -581,8 +581,8 @@ namespace {
                     unsafeSquares = squaresToQueen & (ei.attackedBy[Them][ALL_PIECES] | pos.pieces(Them));
 
 				b = forward_bb(Them, s) & pos.pieces(Us, ROOK, QUEEN);
-				attacked = ei.attackedBy[Them][BISHOP] & ei.attackedBy[Them][KNIGHT] &
-						   ei.attackedBy[Them][PAWN] & ei.attackedBy[Them][ROOK];
+				attacked = ei.attackedBy[Them][BISHOP] | ei.attackedBy[Them][KNIGHT] |
+						   ei.attackedBy[Them][PAWN] | ei.attackedBy[Them][ROOK];
                 if (    unlikely(b)
                     && (b & pos.attacks_from<ROOK>(s))
 					&& (forward_bb(Them, s) & attacked) != forward_bb(Them, s))
