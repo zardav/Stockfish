@@ -587,20 +587,17 @@ namespace {
                 int k = !unsafeSquares ? 15 : !(unsafeSquares & blockSq) ? 9 : 0;
 
 
-				if(defendedSquares)
-				{
-					// If the path to queen is fully defended, assign a big bonus.
-					// Otherwise assign a smaller bonus if the block square is defended.
-					if (defendedSquares == squaresToQueen)
-					    k += 6;
+				// If the path to queen is fully defended, assign a big bonus.
+				// Otherwise assign a smaller bonus if the block square is defended.
+				if (defendedSquares == squaresToQueen)
+					k += 6;
 	
-					else if (defendedSquares & blockSq)
-					    k += 4;
+				else if (defendedSquares & blockSq)
+					k += 4;
 				
-					// If the some squares to queen are defended by a pawn add more small bonus.
-					if(ei.attackedBy[Us][PAWN] & squaresToQueen)
-						k += 1;
-				}
+				// If the some squares to queen are defended by a pawn add more small bonus.
+				if(ei.attackedBy[Us][PAWN] & blockSq)
+					k += 3;
 
                 mbonus += k * rr, ebonus += k * rr;
             }
