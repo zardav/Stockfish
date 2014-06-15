@@ -620,7 +620,7 @@ namespace {
 
     Bitboard b = ei.pi->passed_pawns(us) | ei.pi->candidate_pawns(us);
 
-    if (!b || pos.non_pawn_material(~us))
+    if (!b)
         return SCORE_ZERO;
 
     return Unstoppable * int(relative_rank(us, frontmost_sq(us, b)));
