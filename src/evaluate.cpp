@@ -233,29 +233,43 @@ namespace {
 
   // evaluate_outposts() evaluates bishop and knight outpost squares
 
-  template<PieceType Pt, Color Us>
-  Score evaluate_outposts(const Position& pos, EvalInfo& ei, Square s) {
+  template<PieceType Pt ,Color Us>
+  Score evaluate_outposts(const Position& pos, EvalInfo& ei) {
 
-    const Color Them = (Us == WHITE ? BLACK : WHITE);
-
+	  
     assert (Pt == BISHOP || Pt == KNIGHT);
 
-    // Initial bonus based on square
-    Value bonus = Outpost[Pt == BISHOP][relative_square(Us, s)];
+    const Color Them = (Us == WHITE ? BLACK : WHITE);
+    const Square* pl = pos.list<Pt>(Us);
+	Score score = SCORE_ZERO;
+	Square s;
 
-    // Increase bonus if supported by pawn, especially if the opponent has
-    // no minor piece which can trade with the outpost piece.
-    if (bonus && (ei.attackedBy[Us][PAWN] & s))
-    {
-		if ( (SquareBB[s] & (ei.attackedBy[Us][KNIGHT] | ei.attackedBy[Us][BISHOP])) 
-			|| ( !pos.pieces(Them, KNIGHT)
-            && !(squares_of_color(s) & pos.pieces(Them, BISHOP))))
-            bonus += bonus + bonus / 2;
-        else
-            bonus += bonus / 2;
-    }
+	while ((s = *pl++) != SQ_NONE)
+	{
+		// Bishop and knight outposts squares
+        if (!(pos.pieces(Them, PAWN) & pawn_attack_span(Us, s)))
+		{
+            // Initial bonus based on square
+			Value bonus = Outpost[Pt == BISHOP][relative_square(Us, s)];
 
-    return make_score(bonus, bonus);
+			// Increase bonus if supported by pawn, especially if the opponent has
+			// no minor piece which can trade with the outpost piece.
+			if (bonus && (ei.attackedBy[Us][PAWN] & s))
+			{
+				if ( (SquareBB[s] & (ei.attackedBy[Us][KNIGHT] | ei.attackedBy[Us][BISHOP])) 
+					|| ( !pos.pieces(Them, KNIGHT)
+					&& !(squares_of_color(s) & pos.pieces(Them, BISHOP))))
+					bonus += bonus + bonus / 2;
+				else
+					bonus += bonus / 2;
+			}
+
+			score += make_score(bonus, bonus);
+		}
+	}
+
+	return score;
+    
   }
 
 
@@ -271,7 +285,6 @@ namespace {
     const PieceType NextPt = (Us == WHITE ? Pt : PieceType(Pt + 1));
     const Color Them = (Us == WHITE ? BLACK : WHITE);
     const Square* pl = pos.list<Pt>(Us);
-	const Square* pl1 = pl;
 
     ei.attackedBy[Us][Pt] = 0;
 
@@ -364,16 +377,6 @@ namespace {
                                                                           : TrappedBishopA1H1;
         }
     }
-
-	if(Pt == BISHOP || Pt == KNIGHT)
-	{
-		while ((s = *pl1++) != SQ_NONE)
-		{
-			// Bishop and knight outposts squares
-            if (!(pos.pieces(Them, PAWN) & pawn_attack_span(Us, s)))
-                score += evaluate_outposts<Pt, Us>(pos, ei, s);
-		}
-	}
 
     if (Trace)
         Tracing::terms[Us][Pt] = score;
@@ -710,6 +713,8 @@ namespace {
     // Evaluate pieces and mobility
     score += evaluate_pieces<KNIGHT, WHITE, Trace>(pos, ei, mobility, mobilityArea);
     score += apply_weight(mobility[WHITE] - mobility[BLACK], Weights[Mobility]);
+	score += evaluate_outposts<BISHOP, WHITE>(pos, ei);
+	score += evaluate_outposts<KNIGHT, WHITE>(pos, ei);
 
     // Evaluate kings after all other pieces because we need complete attack
     // information when computing the king safety evaluation.
