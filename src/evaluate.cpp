@@ -580,7 +580,8 @@ namespace {
 
 				b = forward_bb(Them, s) & pos.pieces(Us, ROOK, QUEEN);
                 if (    unlikely(b)
-                    && (b & pos.attacks_from<ROOK>(s)))
+                    && (b & pos.attacks_from<ROOK>(s))
+					&& (forward_bb(Them, s) & ei.attackedBy[Them][ALL_PIECES]) != forward_bb(Them, s))
                     defendedSquares = squaresToQueen;
                 else
                     defendedSquares = squaresToQueen & ei.attackedBy[Us][ALL_PIECES];
