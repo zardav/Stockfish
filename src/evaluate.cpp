@@ -177,6 +177,9 @@ namespace {
     (FileCBB | FileDBB | FileEBB | FileFBB) & (Rank7BB | Rank6BB | Rank5BB)
   };
 
+  const Square Center[] = {SQ_D4, SQ_E4, SQ_D5, SQ_E5};
+  const int CenterSize = 4;
+
   // King danger constants and variables. The king danger scores are taken
   // from KingDanger[]. Various little "meta-bonuses" measuring the strength
   // of the enemy attack are added up into an integer, which is used as an
@@ -620,7 +623,7 @@ namespace {
 
     Bitboard b = ei.pi->passed_pawns(us) | ei.pi->candidate_pawns(us);
 
-    if (!b)
+    if (!b || pos.non_pawn_material(~us))
         return SCORE_ZERO;
 
     return Unstoppable * int(relative_rank(us, frontmost_sq(us, b)));
@@ -658,6 +661,29 @@ namespace {
     return popcount<Full>((Us == WHITE ? safe << 32 : safe >> 32) | (behind & safe));
   }
 
+
+  template<Color Us>
+  Score evaluate_center(const Position& pos, const EvalInfo& ei)
+  {
+	  
+	  int score = 0;
+
+	  Bitboard pawnAttack = ei.attackedBy[Us][PAWN],
+			   allAttack = ei.attackedBy[Us][ALL_PIECES];
+	  
+	  for(int i = 0; i < CenterSize; i++)
+	  {
+		  if(Center[i] & allAttack)
+		  {
+			  score++;
+			  if(Center[i] & pawnAttack)
+				  score += 2;
+		  }
+		  if(Center[i] & pos.pieces(Us))
+			  score++;
+	  }
+	  return make_score(score, score);
+  }
 
   // do_evaluate() is the evaluation entry point, called directly from evaluate()
 
@@ -716,11 +742,13 @@ namespace {
     score +=  evaluate_passed_pawns<WHITE, Trace>(pos, ei)
             - evaluate_passed_pawns<BLACK, Trace>(pos, ei);
 
+	score +=  evaluate_center<WHITE>(pos, ei)
+			- evaluate_center<BLACK>(pos, ei);
+
     // If one side has only a king, score for potential unstoppable pawns
-    if (!pos.non_pawn_material(WHITE))
-        score +=  evaluate_unstoppable_pawns(pos, WHITE, ei);
-	if(!pos.non_pawn_material(BLACK))
-        score -= evaluate_unstoppable_pawns(pos, BLACK, ei);
+    if (!pos.non_pawn_material(WHITE) || !pos.non_pawn_material(BLACK))
+         score +=  evaluate_unstoppable_pawns(pos, WHITE, ei)
+                 - evaluate_unstoppable_pawns(pos, BLACK, ei);
 
     // Evaluate space for both sides, only in middlegame
     if (ei.mi->space_weight())
