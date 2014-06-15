@@ -271,6 +271,7 @@ namespace {
     const PieceType NextPt = (Us == WHITE ? Pt : PieceType(Pt + 1));
     const Color Them = (Us == WHITE ? BLACK : WHITE);
     const Square* pl = pos.list<Pt>(Us);
+	const Square* pl1 = pl;
 
     ei.attackedBy[Us][Pt] = 0;
 
@@ -315,10 +316,6 @@ namespace {
             // Penalty for bishop with same colored pawns
             if (Pt == BISHOP)
                 score -= BishopPawns * ei.pi->pawns_on_same_color_squares(Us, s);
-
-            // Bishop and knight outposts squares
-            if (!(pos.pieces(Them, PAWN) & pawn_attack_span(Us, s)))
-                score += evaluate_outposts<Pt, Us>(pos, ei, s);
 
             // Bishop or knight behind a pawn
             if (    relative_rank(Us, s) < RANK_5
@@ -367,6 +364,16 @@ namespace {
                                                                           : TrappedBishopA1H1;
         }
     }
+
+	if(Pt == BISHOP || Pt == KNIGHT)
+	{
+		while ((s = *pl1++) != SQ_NONE)
+		{
+			// Bishop and knight outposts squares
+            if (!(pos.pieces(Them, PAWN) & pawn_attack_span(Us, s)))
+                score += evaluate_outposts<Pt, Us>(pos, ei, s);
+		}
+	}
 
     if (Trace)
         Tracing::terms[Us][Pt] = score;
