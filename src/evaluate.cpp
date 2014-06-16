@@ -679,10 +679,10 @@ namespace {
 			  if(Center[i] & pawnAttack)
 				  score += 2;
 		  }
-		  if(Center[i] & pos.pieces(Us))
-			  score++;
+		  //if(Center[i] & pos.pieces(Us))
+			//  score++;
 	  }
-	  return make_score(0, score);
+	  return make_score(0, score * 16);
   }
 
   // do_evaluate() is the evaluation entry point, called directly from evaluate()
