@@ -682,7 +682,7 @@ namespace {
 		  if(Center[i] & pos.pieces(Us))
 			  score++;
 	  }
-	  return make_score(score, score);
+	  return make_score(0, score);
   }
 
   // do_evaluate() is the evaluation entry point, called directly from evaluate()
