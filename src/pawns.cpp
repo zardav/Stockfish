@@ -19,6 +19,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <math.h>
 
 #include "bitboard.h"
 #include "bitcount.h"
@@ -101,7 +102,9 @@ namespace {
     Score value = SCORE_ZERO;
     const Square* pl = pos.list<PAWN>(Us);
     const Bitboard* pawnAttacksBB = StepAttacksBB[make_piece(Us, PAWN)];
-
+    
+    int PawnWingDistanceBonus;
+    
     Bitboard ourPawns = pos.pieces(Us, PAWN);
     Bitboard theirPawns = pos.pieces(Them, PAWN);
 
@@ -180,17 +183,20 @@ namespace {
         if (isolated)
             value -= Isolated[opposed][f];
 
+        else
+        {
         if (unsupported && !isolated)
             value -= UnsupportedPawnPenalty;
+
+        if (connected)
+            value += Connected[f][relative_rank(Us, s)];
+        }
 
         if (doubled)
             value -= Doubled[f] / rank_distance(s, lsb(doubled));
 
         if (backward)
             value -= Backward[opposed][f];
-
-        if (connected)
-            value += Connected[f][relative_rank(Us, s)];
 
         if (lever)
            value += Lever[relative_rank(Us, s)];
@@ -209,7 +215,9 @@ namespace {
     if (pos.count<PAWN>(Us) > 1)
     {
         b = e->semiopenFiles[Us] ^ 0xFF;
-        value += PawnsFileSpan * int(msb(b) - lsb(b));
+        PawnWingDistanceBonus = 4*(int(pow((msb(b) - lsb(b))-1,2.0)));
+        
+        value += PawnsFileSpan * PawnWingDistanceBonus / 15;
     }
 
     return value;
