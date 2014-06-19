@@ -270,6 +270,7 @@ namespace {
     const PieceType NextPt = (Us == WHITE ? Pt : PieceType(Pt + 1));
     const Color Them = (Us == WHITE ? BLACK : WHITE);
     const Square* pl = pos.list<Pt>(Us);
+	const Square pawnBlock = (Us == WHITE ? DELTA_N : DELTA_S);
 
     ei.attackedBy[Us][Pt] = 0;
 
@@ -316,7 +317,8 @@ namespace {
                 score -= BishopPawns * ei.pi->pawns_on_same_color_squares(Us, s);
 
             // Bishop and knight outpost square
-            if (!(pos.pieces(Them, PAWN) & pawn_attack_span(Us, s)))
+			if (!(pos.pieces(Them, PAWN) & pawn_attack_span(Us, s) & 
+				~shift_bb<pawnBlock>(pos.pieces(Us, PAWN) & in_front_bb(Us, rank_of(s))) ))
                 score += evaluate_outpost<Pt, Us>(pos, ei, s);
 
             // Bishop or knight behind a pawn
