@@ -548,7 +548,7 @@ namespace {
         int rr = r * (r - 1);
 
         // Base bonus based on rank
-        Value mbonus = Value(17 * rr), ebonus = Value(7 * (rr + r + 1));
+        Value mbonus = Value(rr ? rr * 16 : r * 4), ebonus = Value(7 * (rr + r + 1));
 
         if (rr)
         {
@@ -560,8 +560,7 @@ namespace {
 
             // If blockSq is not the queening square then consider also a second push
             if (relative_rank(Us, blockSq) != RANK_8)
-                ebonus += square_distance(pos.king_square(Them), blockSq + pawn_push(Us)) * rr
-						- square_distance(pos.king_square(Us  ), blockSq + pawn_push(Us)) * rr;
+                ebonus -= square_distance(pos.king_square(Us), blockSq + pawn_push(Us)) * rr;
 
             // If the pawn is free to advance, then increase the bonus
             if (pos.empty(blockSq))
