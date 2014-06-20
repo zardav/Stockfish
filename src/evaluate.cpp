@@ -597,7 +597,7 @@ namespace {
                 mbonus += k * rr, ebonus += k * rr;
             }
 			else if(pos.pieces(Us) & blockSq)
-				mbonus += rr, ebonus += r;
+				mbonus += rr, ebonus += rr * 2;
         } // rr != 0
 
         if (pos.count<PAWN>(Us) < pos.count<PAWN>(Them))
