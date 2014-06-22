@@ -574,7 +574,7 @@ namespace {
 							 attacked = ei.attackedBy[Us][BISHOP] | ei.attackedBy[Us][KNIGHT];
                 if (    unlikely(b)
 					&& (b & pos.attacks_from<ROOK>(s))
-					&& (forward_bb(Them, s) & attacked) != forward_bb(Them, s))
+					&& (forward_bb(Them, s) & (attacked | pos.pieces())) != forward_bb(Them, s))
                     unsafeSquares = squaresToQueen;
                 else
                     unsafeSquares = squaresToQueen & (ei.attackedBy[Them][ALL_PIECES] | pos.pieces(Them));
@@ -583,7 +583,7 @@ namespace {
 				attacked = ei.attackedBy[Them][BISHOP] | ei.attackedBy[Them][KNIGHT];
                 if (    unlikely(b)
                     && (b & pos.attacks_from<ROOK>(s))
-					&& (forward_bb(Them, s) & attacked) != forward_bb(Them, s))
+					&& (forward_bb(Them, s) & (attacked | pos.pieces())) != forward_bb(Them, s))
                     defendedSquares = squaresToQueen;
                 else
                     defendedSquares = squaresToQueen & ei.attackedBy[Us][ALL_PIECES];
