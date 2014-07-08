@@ -78,9 +78,8 @@ void init(OptionsMap& o) {
   o["e_c"]						<< Option(1, 0, 50);
   o["m_rr"]						<< Option(1, 0, 5);
   o["m_r"]						<< Option(1, 0, 10);
-  o["m_c"]						<< Option(1, 0, 50, on_eval);
+  o["m_c"]						<< Option(1, 0, 50);
 
-  o["e_rr"] << Option(1, 0, 5);
 }
 
 
