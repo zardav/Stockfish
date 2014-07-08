@@ -197,6 +197,8 @@ namespace {
   // scores, indexed by a calculated integer number.
   Score KingDanger[128];
 
+  int e_rr_opt = 1, e_r_opt = 1, e_c_opt = 0,
+	  m_rr_opt = 1, m_r_opt = 1, m_c_opt = 0;
 
   // apply_weight() weighs score 'v' by weight 'w' trying to prevent overflow
   Score apply_weight(Score v, const Weight& w) {
@@ -596,8 +598,9 @@ namespace {
 
                 mbonus += k * rr, ebonus += k * rr;
             }
-			else if(pos.pieces(Us) & ~ei.pinnedPieces[Us] & blockSq)
-				mbonus += rr, ebonus += rr * 4;
+			else if(pos.pieces(Us) & blockSq)
+				mbonus += m_rr_opt * rr + m_r_opt * r + m_c_opt, 
+				ebonus += e_rr_opt * rr + e_r_opt * r + e_c_opt;
         } // rr != 0
 
         if (pos.count<PAWN>(Us) < pos.count<PAWN>(Them))
@@ -880,6 +883,15 @@ namespace Eval {
         t = int(std::min(Peak, std::min(0.4 * i * i, t + MaxSlope)));
         KingDanger[i] = apply_weight(make_score(t, 0), Weights[KingSafety]);
     }
+  }
+
+  void spsa_init() {
+	  e_rr_opt = Options["e_rr"];
+	  e_r_opt = Options["e_r"];
+	  e_c_opt = Options["e_c"];
+	  m_rr_opt = Options["m_rr"];
+	  m_r_opt = Options["m_r"];
+	  m_c_opt = Options["m_c"];
   }
 
 } // namespace Eval
