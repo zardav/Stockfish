@@ -321,9 +321,11 @@ namespace {
 			b = pos.pieces(Them, PAWN) & pawn_attack_span(Us, s);
 			if (!b) 
                 score += evaluate_outpost<Pt, Us>(pos, ei, s);
-			else
-				if(!(b & ~shift_bb<pawnBlock>(pos.pieces(Us, PAWN) & in_front_bb(Us, rank_of(s))) ))
-					score += evaluate_outpost<Pt, Us>(pos, ei, s) / 2;
+			else if (!(b & ~shift_bb<pawnBlock>(pos.pieces(Us, PAWN) & in_front_bb(Us, rank_of(s)))))
+			{
+				Score outpost_like = evaluate_outpost<Pt, Us>(pos, ei, s);
+				score += make_score(mg_value(outpost_like), eg_value(outpost_like) / 8);
+			}
             // Bishop or knight behind a pawn
             if (    relative_rank(Us, s) < RANK_5
                 && (pos.pieces(PAWN) & (s + pawn_push(Us))))
