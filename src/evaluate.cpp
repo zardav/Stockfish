@@ -664,6 +664,28 @@ namespace {
     return popcount<Full>((Us == WHITE ? safe << 32 : safe >> 32) | (behind & safe));
   }
 
+  template<Color Us>
+  Score evaluate_center(const Position& pos, const EvalInfo& ei)
+  {
+
+	  int score = 0;
+
+	  Bitboard pawnAttack = ei.attackedBy[Us][PAWN],
+		  allAttack = ei.attackedBy[Us][ALL_PIECES];
+
+	  for (int i = 0; i < CenterSize; i++)
+	  {
+		  if (Center[i] & allAttack)
+		  {
+			  score++;
+			  if (Center[i] & pawnAttack)
+				  score++;
+		  }
+		  if (Center[i] & pos.pieces(Us))
+			  score++;
+	  }
+	  return make_score(score * 16, 0);
+  }
 
   // do_evaluate() is the evaluation entry point, called directly from evaluate()
 
@@ -721,6 +743,9 @@ namespace {
     // Evaluate passed pawns, we need full attack information including king
     score +=  evaluate_passed_pawns<WHITE, Trace>(pos, ei)
             - evaluate_passed_pawns<BLACK, Trace>(pos, ei);
+
+	score += evaluate_center<WHITE>(pos, ei)
+		  -  evaluate_center<BLACK>(pos, ei);
 
     // If both sides have only pawns, score for potential unstoppable pawns
     if (!pos.non_pawn_material(WHITE) && !pos.non_pawn_material(BLACK))
