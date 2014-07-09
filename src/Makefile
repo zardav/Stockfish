@@ -30,7 +30,7 @@ EXE = stockfish
 PREFIX = /usr/local
 # Haiku has a non-standard filesystem layout
 ifeq ($(UNAME),Haiku)
-	PREFIX=/boot/common
+	PREFIX=/boot/system/non-packaged
 endif
 BINDIR = $(PREFIX)/bin
 
@@ -175,7 +175,7 @@ endif
 ifeq ($(COMP),clang)
 	comp=clang
 	CXX=clang++
-	CXXFLAGS += -ansi -pedantic -Wno-long-long -Wextra -Wshadow
+	CXXFLAGS += -pedantic -Wno-long-long -Wextra -Wshadow
 endif
 
 ifeq ($(comp),icc)
@@ -285,7 +285,7 @@ endif
 
 ### 3.9 popcnt
 ifeq ($(popcnt),yes)
-	CXXFLAGS += -msse3 -DUSE_POPCNT
+	CXXFLAGS += -msse3 -mpopcnt -DUSE_POPCNT
 endif
 
 ### 3.10 pext
