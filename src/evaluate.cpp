@@ -197,8 +197,8 @@ namespace {
   // scores, indexed by a calculated integer number.
   Score KingDanger[128];
 
-  int e_rr_opt = 1, e_r_opt = 1, e_c_opt = 0,
-	  m_rr_opt = 1, m_r_opt = 1, m_c_opt = 0;
+  int e_rr_opt = 0, e_r_opt = 0, e_c_opt = 0,
+	  m_rr_opt = 0, m_r_opt = 0, m_c_opt = 0;
 
   const int ScalePawnSpan[2] = { 38, 56 };
 
@@ -902,9 +902,9 @@ namespace Eval {
   }
 
   void spsa_init() {
-	  e_rr_opt = Options["e_rr"];
-	  e_r_opt = Options["e_r"];
-	  e_c_opt = Options["e_c"];
+	  //e_rr_opt = Options["e_rr"];
+	  //e_r_opt = Options["e_r"];
+	  //e_c_opt = Options["e_c"];
 	  m_rr_opt = Options["m_rr"];
 	  m_r_opt = Options["m_r"];
 	  m_c_opt = Options["m_c"];
