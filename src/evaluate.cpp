@@ -177,6 +177,9 @@ namespace {
     (FileCBB | FileDBB | FileEBB | FileFBB) & (Rank7BB | Rank6BB | Rank5BB)
   };
 
+  const Square Center[] = { SQ_D4, SQ_E4, SQ_D5, SQ_E5 };
+  const int CenterSize = 4;
+
   // King danger constants and variables. The king danger scores are taken
   // from KingDanger[]. Various little "meta-bonuses" measuring the strength
   // of the enemy attack are added up into an integer, which is used as an
