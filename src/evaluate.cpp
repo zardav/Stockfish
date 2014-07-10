@@ -678,13 +678,13 @@ namespace {
 
 	  for (int i = 0; i < CenterSize; i++)
 	  {
-		  if (Center[i] & allAttack)
+		  if (allAttack & Center[i])
 		  {
 			  score++;
-			  if (Center[i] & pawnAttack)
+			  if (pawnAttack & Center[i])
 				  score++;
 		  }
-		  if (Center[i] & pos.pieces(Us))
+		  if (pos.pieces(Us) & Center[i])
 			  score++;
 	  }
 	  return make_score(score * 16, 0);
