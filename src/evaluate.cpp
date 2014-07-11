@@ -545,7 +545,16 @@ namespace {
     Bitboard b, squaresToQueen, defendedSquares, unsafeSquares;
     Score score = SCORE_ZERO;
 
+	int ourSpeed	= pos.count<QUEEN>(Us) * 4 
+					+ pos.count<ROOK>(Us) * 2
+					+ pos.count<BISHOP>(Us);
+	int theirSpeed	= pos.count<QUEEN>(Them) * 4
+					+ pos.count<ROOK>(Them) * 2
+					+ pos.count<BISHOP>(Them);
+
     b = ei.pi->passed_pawns(Us);
+
+	int passed_count = b ? more_than_one(b) ? popcount<Max15>(b) : 1 : 0;
 
     while (b)
     {
@@ -612,6 +621,8 @@ namespace {
 
         score += make_score(mbonus, ebonus);
     }
+
+	score += score * (ourSpeed - theirSpeed) * passed_count;
 
     if (Trace)
         Tracing::terms[Us][Tracing::PASSED] = apply_weight(score, Weights[PassedPawns]);
