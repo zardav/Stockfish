@@ -630,9 +630,9 @@ namespace {
 	Bitboard b;
 
 	return (b = ei.pi->passed_pawns(us)) ? 
-		Unstoppable * int(relative_rank(us, frontmost_sq(us, b))) : 
+		Unstoppable * int(relative_rank(us, frontmost_sq(us, b))) * 2: 
 		(b = ei.pi->candidate_pawns(us)) ?
-		Unstoppable * int(relative_rank(us, frontmost_sq(us, b))) / 2 :
+		Unstoppable * int(relative_rank(us, frontmost_sq(us, b))) :
 		SCORE_ZERO;
   }
 
