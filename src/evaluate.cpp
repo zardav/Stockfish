@@ -324,7 +324,7 @@ namespace {
 			else if (!(b & ~shift_bb<pawnBlock>(pos.pieces(Us, PAWN) & in_front_bb(Us, rank_of(s)))))
 			{
 				Score outpost_like = evaluate_outpost<Pt, Us>(pos, ei, s);
-				score += make_score(mg_value(outpost_like) / 4, 0);
+				score += make_score(Outpost[Pt == BISHOP][relative_square(Us, s)], 0);
 			}
             // Bishop or knight behind a pawn
             if (    relative_rank(Us, s) < RANK_5
