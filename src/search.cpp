@@ -849,6 +849,7 @@ moves_loop: // When in check and at SpNode search starts from here
       if (    depth >= 3 * ONE_PLY
           && !pvMove
           && !captureOrPromotion
+		  && (moveCount > 1 || ss->ply > 12 * ONE_PLY)
           &&  move != ttMove
           &&  move != ss->killers[0]
           &&  move != ss->killers[1])
