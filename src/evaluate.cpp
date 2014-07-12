@@ -626,10 +626,14 @@ namespace {
   // somewhat related to the possibility that pawns are unstoppable.
 
   Score evaluate_unstoppable_pawns(Color us, const EvalInfo& ei) {
+	  
+	Bitboard b;
 
-    Bitboard b = ei.pi->passed_pawns(us) | ei.pi->candidate_pawns(us);
-
-    return b ? Unstoppable * int(relative_rank(us, frontmost_sq(us, b))) : SCORE_ZERO;
+	return (b = ei.pi->passed_pawns(us)) ? 
+		Unstoppable * int(relative_rank(us, frontmost_sq(us, b))) : 
+		(b = ei.pi->candidate_pawns(us)) ?
+		Unstoppable * int(relative_rank(us, frontmost_sq(us, b))) / 2 :
+		SCORE_ZERO;
   }
 
 
