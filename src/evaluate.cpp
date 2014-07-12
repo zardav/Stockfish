@@ -622,7 +622,7 @@ namespace {
         score += make_score(mbonus, ebonus);
     }
 
-	score += score * (ourSpeed - theirSpeed) * passed_count;
+	score += score / 64 * (ourSpeed - theirSpeed) * passed_count;
 
     if (Trace)
         Tracing::terms[Us][Tracing::PASSED] = apply_weight(score, Weights[PassedPawns]);
