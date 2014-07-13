@@ -516,12 +516,20 @@ namespace {
     if (weakEnemies)
     {
         b = weakEnemies & (ei.attackedBy[Us][KNIGHT] | ei.attackedBy[Us][BISHOP]);
-        if (b)
-            score += Threat[0][type_of(pos.piece_on(lsb(b)))];
+		if (b) {
+			Square sq = pop_lsb(&b);
+			PieceType t = b ? std::max(type_of(pos.piece_on(sq)), type_of(pos.piece_on(lsb(b))))
+							: type_of(pos.piece_on(sq));
+			score += Threat[0][t];
+		}
 
         b = weakEnemies & (ei.attackedBy[Us][ROOK] | ei.attackedBy[Us][QUEEN]);
-        if (b)
-            score += Threat[1][type_of(pos.piece_on(lsb(b)))];
+		if (b) {
+			Square sq = pop_lsb(&b);
+			PieceType t = b ? std::max(type_of(pos.piece_on(sq)), type_of(pos.piece_on(lsb(b))))
+							: type_of(pos.piece_on(sq));
+			score += Threat[1][t];
+		}
 
         b = weakEnemies & ~ei.attackedBy[Them][ALL_PIECES];
         if (b)
