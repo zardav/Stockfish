@@ -636,10 +636,12 @@ namespace {
 		bonus += more_than_one(b) ? passed * 2 : passed;
 	}
 
-	b = ei.pi->candidate_pawns(us);
-	if (b) {
-		Score candidate = Unstoppable * int(relative_rank(us, frontmost_sq(us, b)));
-		bonus += more_than_one(b) ? candidate : candidate / 2;
+	else {
+		b = ei.pi->candidate_pawns(us);
+		if (b) {
+			Score candidate = Unstoppable * int(relative_rank(us, frontmost_sq(us, b)));
+			bonus += more_than_one(b) ? candidate : candidate / 2;
+		}
 	}
 
 	return bonus;
