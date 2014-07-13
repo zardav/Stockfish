@@ -627,9 +627,22 @@ namespace {
 
   Score evaluate_unstoppable_pawns(Color us, const EvalInfo& ei) {
 
-    Bitboard b = ei.pi->passed_pawns(us) | ei.pi->candidate_pawns(us);
+	Score bonus = SCORE_ZERO;
+	Bitboard b;
 
-    return b ? Unstoppable * int(relative_rank(us, frontmost_sq(us, b))) : SCORE_ZERO;
+	b = ei.pi->passed_pawns(us);
+	if (b) {
+		Score passed = Unstoppable * int(relative_rank(us, frontmost_sq(us, b)));
+		bonus += more_than_one(b) ? passed * 2 : passed;
+	}
+
+	b = ei.pi->candidate_pawns(us);
+	if (b) {
+		Score candidate = Unstoppable * int(relative_rank(us, frontmost_sq(us, b)));
+		bonus += more_than_one(b) ? candidate : candidate / 2;
+	}
+
+	return bonus;
   }
 
 
