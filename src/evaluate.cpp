@@ -554,6 +554,8 @@ namespace {
         assert(pos.pawn_passed(Us, s));
 
         int r = relative_rank(Us, s) - RANK_2;
+		if (r == 1)
+			r = 0;
         int rr = r * (r - 1);
 
         // Base bonus based on rank
