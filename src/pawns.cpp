@@ -167,7 +167,7 @@ namespace {
         // pawn on adjacent files is higher than or equal to the number of
         // enemy pawns in the forward direction on the adjacent files.
         candidate =   !(opposed | passed | backward | isolated)
-                   && !(pos.pieces(Them) & (s + pawn_push(Us))
+                   && !(pos.pieces(Them) & (s + pawn_push(Us)))
                    && (b = pawn_attack_span(Them, s + pawn_push(Us)) & ourPawns) != 0
                    &&  popcount<Max15>(b) >= popcount<Max15>(pawn_attack_span(Us, s) & theirPawns);
 
