@@ -184,7 +184,7 @@ namespace {
             value -= UnsupportedPawnPenalty;
 
         if (doubled)
-            value -= Doubled[f] / rank_distance(s, lsb(doubled));
+            value -= Doubled[f] / rank_distance(s, lsb(doubled)) / (connected ? 2 : 1);
 
         if (backward)
             value -= Backward[opposed][f];
