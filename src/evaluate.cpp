@@ -331,9 +331,9 @@ namespace {
             // Rook piece attacking enemy pawns on the same rank/file
             if (relative_rank(Us, s) >= RANK_5)
             {
-                Bitboard pawns = pos.pieces(Them, PAWN) & PseudoAttacks[ROOK][s] & ~ei.attackedBy[Them][PAWN];
+                Bitboard pawns = pos.pieces(Them, PAWN) & PseudoAttacks[ROOK][s];
                 if (pawns)
-                    score += popcount<Max15>(pawns) * RookOnPawn;
+                    score += more_than_one(pawns) ? RookOnPawn * 2 : RookOnPawn;
             }
 
             // Give a bonus for a rook on a open or semi-open file
