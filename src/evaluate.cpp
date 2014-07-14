@@ -331,7 +331,7 @@ namespace {
             // Rook piece attacking enemy pawns on the same rank/file
             if (relative_rank(Us, s) >= RANK_5)
             {
-                Bitboard pawns = pos.pieces(Them, PAWN) & PseudoAttacks[ROOK][s];
+                Bitboard pawns = pos.pieces(Them, PAWN) & PseudoAttacks[ROOK][s] & ~ei.attackedBy[Them][PAWN];
                 if (pawns)
                     score += popcount<Max15>(pawns) * RookOnPawn;
             }
