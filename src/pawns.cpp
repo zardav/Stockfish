@@ -193,7 +193,7 @@ namespace {
             value += Connected[f][relative_rank(Us, s)];
 
         if (lever)
-           value += Lever[relative_rank(Us, s)];
+           value += Lever[relative_rank(Us, s)] * (!unsupported ? 2 : 1);
 
         if (candidate)
         {
