@@ -168,7 +168,7 @@ namespace {
         // enemy pawns in the forward direction on the adjacent files.
         candidate =   !(opposed | passed | backward | isolated)
                    && (b = pawn_attack_span(Them, s + pawn_push(Us)) & ourPawns) != 0
-                   &&  popcount<Max15>(b) >= popcount<Max15>(pawn_attack_span(Us, s) & theirPawns);
+                   && (more_than_one(b) ? 2 : 1) >= popcount<Max15>(pawn_attack_span(Us, s) & theirPawns);
 
         // Passed pawns will be properly scored in evaluation because we need
         // full attack info to evaluate passed pawns. Only the frontmost passed
