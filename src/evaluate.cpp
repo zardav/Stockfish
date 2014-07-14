@@ -448,7 +448,7 @@ namespace {
         }
 
         // Analyse the enemy's safe distance checks for sliders and knights
-        safe = ~(pos.pieces(Them) | ei.attackedBy[Us][ALL_PIECES]);
+        safe = ~(pos.pieces() | ei.attackedBy[Us][ALL_PIECES]);
 
         b1 = pos.attacks_from<ROOK>(ksq) & safe;
         b2 = pos.attacks_from<BISHOP>(ksq) & safe;
