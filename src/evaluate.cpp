@@ -137,6 +137,8 @@ namespace {
     V(0), V(5), V(8), V(8), V(8), V(8), V(5), V(0) }
   };
 
+  int outpost_m = 8, outpost_e = 8;
+
   // Threat[attacking][attacked] contains bonuses according to which piece
   // type attacks which one.
   const Score Threat[][PIECE_TYPE_NB] = {
@@ -255,7 +257,7 @@ namespace {
             bonus += bonus / 2;
     }
 
-    return make_score(bonus, bonus);
+    return make_score(bonus * outpost_m / 8, bonus * outpost_e / 8);
   }
 
 
@@ -895,6 +897,11 @@ namespace Eval {
         t = int(std::min(Peak, std::min(0.4 * i * i, t + MaxSlope)));
         KingDanger[i] = apply_weight(make_score(t, 0), Weights[KingSafety]);
     }
+  }
+
+  void init_spsa() {
+	  outpost_m = Options["outpost_m"];
+	  outpost_e = Options["oupost_g"];
   }
 
 } // namespace Eval
