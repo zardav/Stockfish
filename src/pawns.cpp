@@ -192,7 +192,7 @@ namespace {
         if (connected)
             value += Connected[f][relative_rank(Us, s)];
 
-		if (lever) {
+        if (lever) {
             if (!more_than_one(lever)) {
                 Square lv = lsb(lever);
                 File me = file_of(s), he = file_of(lv);
