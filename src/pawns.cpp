@@ -195,12 +195,10 @@ namespace {
         if (lever)
            value += Lever[relative_rank(Us, s)];
 
-        if (candidate)
+        if (candidate && !doubled)
         {
             value += CandidatePassed[relative_rank(Us, s)];
-
-            if (!doubled)
-                e->candidatePawns[Us] |= s;
+            e->candidatePawns[Us] |= s;
         }
     }
 
