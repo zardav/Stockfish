@@ -198,7 +198,7 @@ namespace {
                 File me = file_of(s), he = file_of(lv);
                 me = me > FILE_D ? FILE_H - me : me;
                 he = he > FILE_D ? FILE_H - he : he;
-                value += make_score(20, 0) * int(he - me);
+                value += make_score(10, 0) * int(he - me);
             }
             value += Lever[relative_rank(Us, s)];
         }
