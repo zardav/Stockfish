@@ -137,7 +137,7 @@ namespace {
         opposed     =   theirPawns & forward_bb(Us, s);
         passed      = !(theirPawns & passed_pawn_mask(Us, s));
         lever       =   theirPawns & pawnAttacksBB[s];
-		stonewall   = more_than_one(ourPawns & pawnAttacksBB[s]);
+        stonewall   = more_than_one(ourPawns & pawnAttacksBB[s]);
 
         // Test for backward pawn.
         // If the pawn is passed, isolated, or connected it cannot be
@@ -204,8 +204,8 @@ namespace {
                 e->candidatePawns[Us] |= s;
         }
 
-        if (stonewall)
-            value -= make_score(30, 30);
+        if (stonewall && (pos.pieces(Them) & (s + pawn_push(Us))))
+            value -=  make_score(60, 60);
     }
 
     b = e->semiopenFiles[Us] ^ 0xFF;
