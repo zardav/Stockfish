@@ -204,7 +204,7 @@ namespace {
                 e->candidatePawns[Us] |= s;
         }
 
-        if (stonewall && (pos.piece_on(s + pawn_push(Us)) == make_piece(Them, PAWN)))
+        if (stonewall && rank_of(s) <= RANK_3 && (pos.piece_on(s + pawn_push(Us)) == make_piece(Them, PAWN)))
             value -=  make_score(30, 30);
     }
 
