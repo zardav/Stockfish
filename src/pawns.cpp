@@ -204,8 +204,8 @@ namespace {
                 e->candidatePawns[Us] |= s;
         }
 
-        if (stonewall && (pos.pieces(Them) & (s + pawn_push(Us))))
-            value -=  make_score(60, 60);
+        if (stonewall && (pos.piece_on(s + pawn_push(Us)) == make_piece(Them, PAWN)))
+            value -=  make_score(30, 30);
     }
 
     b = e->semiopenFiles[Us] ^ 0xFF;
