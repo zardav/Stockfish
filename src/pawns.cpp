@@ -62,6 +62,11 @@ namespace {
     S( 0, 0), S( 0, 0), S(0, 0), S(0, 0),
     S(20,20), S(40,40), S(0, 0), S(0, 0) };
 
+  // Stonewall penalty by block piece
+  const Score Stonewall[PIECE_TYPE_NB] = {
+    S( 0, 0), S(60,60), S(40,40), S(40,40),
+    S( 0, 0), S( 5, 5), S( 0, 0), S( 0, 0) };
+
   // Bonus for file distance of the two outermost pawns
   const Score PawnsFileSpan = S(0, 15);
 
@@ -119,6 +124,8 @@ namespace {
 
         f = file_of(s);
 
+        Square blockSq = s + pawn_push(Us);
+
         // This file cannot be semi-open
         e->semiopenFiles[Us] &= ~(1 << f);
 
@@ -168,7 +175,7 @@ namespace {
         // pawn on adjacent files is higher than or equal to the number of
         // enemy pawns in the forward direction on the adjacent files.
         candidate =   !(opposed | passed | backward | isolated)
-                   && (b = pawn_attack_span(Them, s + pawn_push(Us)) & ourPawns) != 0
+                   && (b = pawn_attack_span(Them, blockSq) & ourPawns) != 0
                    &&  popcount<Max15>(b) >= popcount<Max15>(pawn_attack_span(Us, s) & theirPawns);
 
         // Passed pawns will be properly scored in evaluation because we need
@@ -204,8 +211,8 @@ namespace {
                 e->candidatePawns[Us] |= s;
         }
 
-        if (stonewall && (pos.pieces(Them) & (s + pawn_push(Us))))
-            value -=  make_score(60, 60);
+        if (stonewall && (pos.pieces(Them) & blockSq))
+            value -= Stonewall[type_of(pos.piece_on(blockSq))];
     }
 
     b = e->semiopenFiles[Us] ^ 0xFF;
