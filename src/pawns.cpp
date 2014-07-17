@@ -97,7 +97,7 @@ namespace {
     Bitboard b, p, doubled;
     Square s;
     File f;
-    bool passed, isolated, opposed, connected, backward, candidate, unsupported, lever;
+    bool passed, isolated, opposed, connected, backward, candidate, unsupported, lever, stonewall;
     Score value = SCORE_ZERO;
     const Square* pl = pos.list<PAWN>(Us);
     const Bitboard* pawnAttacksBB = StepAttacksBB[make_piece(Us, PAWN)];
@@ -137,6 +137,7 @@ namespace {
         opposed     =   theirPawns & forward_bb(Us, s);
         passed      = !(theirPawns & passed_pawn_mask(Us, s));
         lever       =   theirPawns & pawnAttacksBB[s];
+		stonewall   = more_than_one(ourPawns & pawnAttacksBB[s]);
 
         // Test for backward pawn.
         // If the pawn is passed, isolated, or connected it cannot be
@@ -202,6 +203,9 @@ namespace {
             if (!doubled)
                 e->candidatePawns[Us] |= s;
         }
+
+        if (stonewall)
+            value -= make_score(30, 30);
     }
 
     b = e->semiopenFiles[Us] ^ 0xFF;
