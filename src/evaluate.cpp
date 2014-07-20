@@ -158,8 +158,8 @@ namespace {
   const Score RookOnPawn             = make_score( 10, 28);
   const Score RookOpenFile           = make_score( 64, 27);
   const Score RookSemiopenFile       = make_score( 21, -4);
-  const Score DoubleRookOpenFile     = make_score(128,  9);
-  const Score DoubleRookSemiopenFile = make_score( -3, 19);
+  const Score DoubleRookOpenFile     = make_score(128, 60);
+  const Score DoubleRookSemiopenFile = make_score(-10,-40);
   const Score BishopPawns            = make_score(  8, 12);
   const Score MinorBehindPawn        = make_score( 16,  0);
   const Score TrappedRook            = make_score( 92,  0);
@@ -342,9 +342,10 @@ namespace {
             if (ei.pi->semiopen_file(Us, file_of(s)))
             {
                 if  (pos.pieces(Us, ROOK) & forward_bb(Us, s))
-                     score += ei.pi->semiopen_file(Them, file_of(s)) ? DoubleRookOpenFile : DoubleRookSemiopenFile;
+                    score += ei.pi->semiopen_file(Them, file_of(s)) ? DoubleRookOpenFile : DoubleRookSemiopenFile;
 
-                else score += ei.pi->semiopen_file(Them, file_of(s)) ? RookOpenFile : RookSemiopenFile;
+                else 
+                    score += ei.pi->semiopen_file(Them, file_of(s)) ? RookOpenFile : RookSemiopenFile;
             }
 
             if (mob > 3 || ei.pi->semiopen_file(Us, file_of(s)))
