@@ -193,7 +193,7 @@ namespace {
             value += Connected[f][relative_rank(Us, s)];
 
         if (lever)
-           value += Lever[relative_rank(Us, s)];
+           value += Lever[relative_rank(Us, s)] * (file_distance(s, pos.king_square(Them)) <= 2 ? 2 : 1);
 
         if (candidate)
         {
