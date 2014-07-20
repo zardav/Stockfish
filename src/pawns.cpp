@@ -64,8 +64,8 @@ namespace {
 
   // Stonewall penalty by block piece
   const Score Stonewall[PIECE_TYPE_NB] = {
-    S( 0, 0), S(60,60), S(40,40), S(40,40),
-    S( 0, 0), S( 5, 5), S( 0, 0), S( 0, 0) };
+    S( 0, 0), S(20,20), S(20,20), S(20,20),
+    S( 0, 0), S( 0, 0), S( 0, 0), S( 0, 0) };
 
   // Bonus for file distance of the two outermost pawns
   const Score PawnsFileSpan = S(0, 15);
@@ -144,7 +144,7 @@ namespace {
         opposed     =   theirPawns & forward_bb(Us, s);
         passed      = !(theirPawns & passed_pawn_mask(Us, s));
         lever       =   theirPawns & pawnAttacksBB[s];
-        stonewall   = more_than_one(ourPawns & pawnAttacksBB[s]);
+        stonewall   = relative_rank(Us, s) <= RANK_4 && more_than_one(ourPawns & pawnAttacksBB[s]);
 
         // Test for backward pawn.
         // If the pawn is passed, isolated, or connected it cannot be
