@@ -177,8 +177,7 @@ namespace {
     (FileCBB | FileDBB | FileEBB | FileFBB) & (Rank7BB | Rank6BB | Rank5BB)
   };
 
-  const Square Center[] = { SQ_D4, SQ_E4, SQ_D5, SQ_E5 };
-  const int CenterSize = 4;
+  const Bitboard Center = (Rank4BB | Rank5BB) & (FileDBB | FileEBB);
 
   // King danger constants and variables. The king danger scores are taken
   // from KingDanger[]. Various little "meta-bonuses" measuring the strength
@@ -670,23 +669,13 @@ namespace {
   template<Color Us>
   Score evaluate_center(const Position& pos, const EvalInfo& ei)
   {
-
 	  int score = 0;
 
 	  Bitboard pawnAttack = ei.attackedBy[Us][PAWN],
 		  allAttack = ei.attackedBy[Us][ALL_PIECES];
 
-	  for (int i = 0; i < CenterSize; i++)
-	  {
-		  if (allAttack & Center[i])
-		  {
-			  score++;
-			  if (pawnAttack & Center[i])
-				  score++;
-		  }
-		  if (pos.pieces(Us) & Center[i])
-			  score++;
-	  }
+      score += pawnAttack ? popcount<Max15>(pawnAttack) * 2 : 0;
+      score += allAttack  ? popcount<Max15>(allAttack)      : 0;
 	  return make_score(score * 16, 0);
   }
 
