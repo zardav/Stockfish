@@ -155,13 +155,15 @@ namespace {
 
   #undef S
 
-  const Score RookOnPawn       = make_score(10, 28);
-  const Score RookOpenFile     = make_score(43, 21);
-  const Score RookSemiopenFile = make_score(19, 10);
-  const Score BishopPawns      = make_score( 8, 12);
-  const Score MinorBehindPawn  = make_score(16,  0);
-  const Score TrappedRook      = make_score(92,  0);
-  const Score Unstoppable      = make_score( 0, 20);
+  const Score RookOnPawn             = make_score( 10, 28);
+  const Score RookOpenFile           = make_score( 64, 27);
+  const Score RookSemiopenFile       = make_score( 21, -4);
+  const Score DoubleRookOpenFile     = make_score(128,  9);
+  const Score DoubleRookSemiopenFile = make_score( -3, 19);
+  const Score BishopPawns            = make_score(  8, 12);
+  const Score MinorBehindPawn        = make_score( 16,  0);
+  const Score TrappedRook            = make_score( 92,  0);
+  const Score Unstoppable            = make_score(  0, 20);
 
   // Penalty for a bishop on a1/h1 (a8/h8 for black) which is trapped by
   // a friendly pawn on b2/g2 (b7/g7 for black). This can obviously only
@@ -338,7 +340,12 @@ namespace {
 
             // Give a bonus for a rook on a open or semi-open file
             if (ei.pi->semiopen_file(Us, file_of(s)))
-                score += ei.pi->semiopen_file(Them, file_of(s)) ? RookOpenFile : RookSemiopenFile;
+            {
+                if  (pos.pieces(Us, ROOK) & forward_bb(Us, s))
+                     score += ei.pi->semiopen_file(Them, file_of(s)) ? DoubleRookOpenFile : DoubleRookSemiopenFile;
+
+                else score += ei.pi->semiopen_file(Them, file_of(s)) ? RookOpenFile : RookSemiopenFile;
+            }
 
             if (mob > 3 || ei.pi->semiopen_file(Us, file_of(s)))
                 continue;
@@ -574,18 +581,22 @@ namespace {
             // If the pawn is free to advance, then increase the bonus
             if (pos.empty(blockSq))
             {
-                // If there is a rook or queen attacking/defending the pawn from behind,
-                // consider all the squaresToQueen. Otherwise consider only the squares
-                // in the pawn's path attacked or occupied by the enemy.
-                defendedSquares = unsafeSquares = squaresToQueen = forward_bb(Us, s);
+                squaresToQueen = forward_bb(Us, s);
 
-                Bitboard bb = forward_bb(Them, s) & pos.pieces(ROOK, QUEEN) & pos.attacks_from<ROOK>(s);
+                // If there is an enemy rook or queen attacking the pawn from behind,
+                // add all X-ray attacks by the rook or queen. Otherwise consider only
+                // the squares in the pawn's path attacked or occupied by the enemy.
+                if (    unlikely(forward_bb(Them, s) & pos.pieces(Them, ROOK, QUEEN))
+                    && (forward_bb(Them, s) & pos.pieces(Them, ROOK, QUEEN) & pos.attacks_from<ROOK>(s)))
+                    unsafeSquares = squaresToQueen;
+                else
+                    unsafeSquares = squaresToQueen & (ei.attackedBy[Them][ALL_PIECES] | pos.pieces(Them));
 
-                if (!(pos.pieces(Us) & bb))
-                    defendedSquares &= ei.attackedBy[Us][ALL_PIECES];
-
-                if (!(pos.pieces(Them) & bb))
-                    unsafeSquares &= ei.attackedBy[Them][ALL_PIECES] | pos.pieces(Them);
+                if (    unlikely(forward_bb(Them, s) & pos.pieces(Us, ROOK, QUEEN))
+                    && (forward_bb(Them, s) & pos.pieces(Us, ROOK, QUEEN) & pos.attacks_from<ROOK>(s)))
+                    defendedSquares = squaresToQueen;
+                else
+                    defendedSquares = squaresToQueen & ei.attackedBy[Us][ALL_PIECES];
 
                 // If there aren't any enemy attacks, assign a big bonus. Otherwise
                 // assign a smaller bonus if the block square isn't attacked.
