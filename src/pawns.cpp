@@ -59,8 +59,8 @@ namespace {
 
   // Levers bonus by rank
   const Score Lever[RANK_NB] = {
-    S( 0, 0), S( 0, 0), S(0, 0), S(0, 0),
-    S(30,20), S(25,50), S(0, 0), S(0, 0) };
+    S( 0, 0), S( 0, 0), S( 0, 0), S(0, 0),
+    S( 0,30), S( 0,60), S( 0, 0), S(0, 0) };
 
   // Bonus for file distance of the two outermost pawns
   const Score PawnsFileSpan = S(0, 15);
