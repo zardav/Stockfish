@@ -94,10 +94,10 @@ namespace {
     const Square Right = (Us == WHITE ? DELTA_NE : DELTA_SW);
     const Square Left  = (Us == WHITE ? DELTA_NW : DELTA_SE);
 
-    Bitboard b, p, doubled, lever;
+    Bitboard b, p, doubled;
     Square s;
     File f;
-    bool passed, isolated, opposed, connected, backward, candidate, unsupported;
+    bool passed, isolated, opposed, connected, backward, candidate, unsupported, lever;
     Score value = SCORE_ZERO;
     const Square* pl = pos.list<PAWN>(Us);
     const Bitboard* pawnAttacksBB = StepAttacksBB[make_piece(Us, PAWN)];
@@ -193,13 +193,14 @@ namespace {
             value += Connected[f][relative_rank(Us, s)];
 
         if (lever) {
-            if (!more_than_one(lever)) {
-                Square lv = lsb(lever);
-                File me = file_of(s), he = file_of(lv);
-                me = me > FILE_D ? FILE_H - me : me;
-                he = he > FILE_D ? FILE_H - he : he;
-                value += make_score(10, 0) * int(he - me);
-            }
+            Square blockSq = s + pawn_push(Us);
+            Square lv = (blockSq & shift_bb<DELTA_E>(theirPawns)) ?
+                blockSq + DELTA_W : blockSq + DELTA_E;
+            File me = file_of(s), he = file_of(lv);
+            me = me > FILE_D ? FILE_H - me : me;
+            he = he > FILE_D ? FILE_H - he : he;
+            value += make_score(40, 0) * int(he - me);
+
             value += Lever[relative_rank(Us, s)];
         }
 
