@@ -95,7 +95,7 @@ namespace {
     const Square Left  = (Us == WHITE ? DELTA_NW : DELTA_SE);
 
     Bitboard b, p, doubled;
-    Square s;
+    Square s, *passedPawns = e->passedPawns[Us];
     File f;
     bool passed, isolated, opposed, connected, backward, candidate, unsupported, lever;
     Score value = SCORE_ZERO;
@@ -105,7 +105,7 @@ namespace {
     Bitboard ourPawns = pos.pieces(Us, PAWN);
     Bitboard theirPawns = pos.pieces(Them, PAWN);
 
-    e->passedPawns[Us] = e->candidatePawns[Us] = 0;
+    e->candidatePawns[Us] = 0;
     e->kingSquares[Us] = SQ_NONE;
     e->semiopenFiles[Us] = 0xFF;
     e->pawnAttacks[Us] = shift_bb<Right>(ourPawns) | shift_bb<Left>(ourPawns);
@@ -174,7 +174,7 @@ namespace {
         // full attack info to evaluate passed pawns. Only the frontmost passed
         // pawn on each file is considered a true passed pawn.
         if (passed && !doubled)
-            e->passedPawns[Us] |= s;
+            *passedPawns++ = s;
 
         // Score this pawn
         if (isolated)
@@ -204,6 +204,7 @@ namespace {
         }
     }
 
+    *passedPawns = SQ_NONE;
     b = e->semiopenFiles[Us] ^ 0xFF;
     e->pawnSpan[Us] = b ? int(msb(b) - lsb(b)) : 0;
 
