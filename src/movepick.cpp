@@ -40,7 +40,7 @@ namespace {
   {
     ExtMove tmp, *p, *q;
 
-    for (p = begin + 1; p < end; ++p)
+    for (p = begin + 1; p <= end; ++p)
     {
         tmp = *p;
         for (q = p; q != begin && *(q-1) < tmp; --q)
