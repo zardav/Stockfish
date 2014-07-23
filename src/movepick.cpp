@@ -185,7 +185,7 @@ void MovePicker::score<QUIETS>() {
   {
       m = it->move;
       it->value = history[pos.moved_piece(m)][to_sq(m)]
-             + (PSQT[pos.moved_piece(m)][to_sq(m)] - PSQT[pos.moved_piece(m)][from_sq(m)]) / 4;
+             + mg_value(PSQT[pos.moved_piece(m)][to_sq(m)] - PSQT[pos.moved_piece(m)][from_sq(m)]) / 4;
   }
 }
 
