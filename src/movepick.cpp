@@ -36,17 +36,22 @@ namespace {
   };
 
   // Our insertion sort, which is guaranteed (and also needed) to be stable
-  void insertion_sort(ExtMove* begin, ExtMove* end)
+  // -- Test quick sort --
+  void quick_sort(ExtMove* begin, ExtMove* end)
   {
-    ExtMove tmp, *p, *q;
+    if (end <= begin) return;
 
-    for (p = begin + 1; p < end; ++p)
+    ExtMove *p, *store = begin;
+
+    for (p = begin; p < end; ++p)
     {
-        tmp = *p;
-        for (q = p; q != begin && *(q-1) < tmp; --q)
-            *q = *(q-1);
-        *q = tmp;
+        if (*end < *p) 
+            std::swap(*p, *store++);
     }
+    std::swap(*store, *end);
+
+    quick_sort(begin, store - 1);
+    quick_sort(store + 1, end);
   }
 
   // Unary predicate used by std::partition to split positive values from remaining
@@ -255,14 +260,14 @@ void MovePicker::generate_next_stage() {
       endQuiets = end = generate<QUIETS>(pos, moves);
       score<QUIETS>();
       end = std::partition(cur, end, has_positive_value);
-      insertion_sort(cur, end);
+      quick_sort(cur, end);
       return;
 
   case QUIETS_2_S1:
       cur = end;
       end = endQuiets;
       if (depth >= 3 * ONE_PLY)
-          insertion_sort(cur, end);
+          quick_sort(cur, end);
       return;
 
   case BAD_CAPTURES_S1:
