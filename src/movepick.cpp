@@ -22,6 +22,7 @@
 
 #include "movepick.h"
 #include "thread.h"
+#include "psqtab.h"
 
 namespace {
 
@@ -183,7 +184,8 @@ void MovePicker::score<QUIETS>() {
   for (ExtMove* it = moves; it != end; ++it)
   {
       m = it->move;
-      it->value = history[pos.moved_piece(m)][to_sq(m)];
+      it->value = history[pos.moved_piece(m)][to_sq(m)]
+             + (PSQT[pos.moved_piece(m)][to_sq(m)] - PSQT[pos.moved_piece(m)][from_sq(m)]) / 4;
   }
 }
 
