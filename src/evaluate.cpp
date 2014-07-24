@@ -137,6 +137,14 @@ namespace {
     V(0), V(5), V(8), V(8), V(8), V(8), V(5), V(0) }
   };
 
+  // Passed and RankFactor arrays are for passed pawns evaluating value
+
+  const Score Passed[RANK_NB] = {
+    S(  0,  0), S(  0,   7), S(  0,  14), S(34, 35),
+    S(102, 70), S(204, 119), S(340, 182), S( 0,  0)
+  };
+  const int RankFactor[RANK_NB] = {0, 0, 0, 2, 6, 12, 20, 0};
+
   // Threat[attacking][attacked] contains bonuses according to which piece
   // type attacks which one.
   const Score Threat[][PIECE_TYPE_NB] = {
@@ -553,11 +561,12 @@ namespace {
 
         assert(pos.pawn_passed(Us, s));
 
-        int r = relative_rank(Us, s) - RANK_2;
-        int rr = r * (r - 1);
+        int rank = relative_rank(Us, s);
+        int rr = RankFactor[rank];
 
         // Base bonus based on rank
-        Value mbonus = Value(17 * rr), ebonus = Value(7 * (rr + r + 1));
+        Score bonus = Passed[rank];
+        Value mbonus = Value(0), ebonus = Value(0);
 
         if (rr)
         {
@@ -601,14 +610,14 @@ namespace {
 
                 mbonus += k * rr, ebonus += k * rr;
             }
-            else if(pos.pieces(Us) & blockSq)
-                mbonus += rr * 3 + r * 2 + 3, ebonus += rr + r * 2;
+           else if(pos.pieces(Us) & blockSq)
+                mbonus += rr * 3 + rank * 2 + 1, ebonus += rr + rank * 2 - 2;
         } // rr != 0
 
         if (pos.count<PAWN>(Us) < pos.count<PAWN>(Them))
-            ebonus += ebonus / 4;
+            ebonus += (ebonus + eg_value(bonus)) / 4;
 
-        score += make_score(mbonus, ebonus);
+        score += bonus + make_score(mbonus, ebonus);
     }
 
     if (Trace)
