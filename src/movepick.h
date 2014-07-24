@@ -28,6 +28,7 @@
 #include "search.h"
 #include "types.h"
 
+void tune_scoreM();
 
 /// The Stats struct stores moves statistics. According to the template parameter
 /// the class can store History, Gains and Countermoves. History records how often

@@ -23,6 +23,12 @@
 #include "movepick.h"
 #include "thread.h"
 #include "psqtab.h"
+#include "ucioption.h"
+
+int scoreM = 0;
+void tune_scoreM() {
+    scoreM = Options["scoreM"];
+}
 
 namespace {
 
@@ -184,8 +190,11 @@ void MovePicker::score<QUIETS>() {
   for (ExtMove* it = moves; it != end; ++it)
   {
       m = it->move;
-      it->value = history[pos.moved_piece(m)][to_sq(m)]
-             + mg_value(PSQT[type_of(pos.moved_piece(m))][to_sq(m)] - PSQT[type_of(pos.moved_piece(m))][from_sq(m)]) / 4;
+      Piece p = pos.moved_piece(m);
+      PieceType pt = type_of(p);
+      Color us = color_of(p);
+      it->value = history[pos.moved_piece(m)][to_sq(m)] +
+        scoreM * mg_value(PSQT[pt][relative_square(us, to_sq(m))] - PSQT[pt][relative_square(us, from_sq(m))]) / 4;
   }
 }
 
