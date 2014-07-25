@@ -193,7 +193,7 @@ void MovePicker::score<QUIETS>() {
       Piece pc = pos.moved_piece(m);
       Square from = from_sq(m), to = to_sq(m);
       it->value = history[pc][to] +
-        scoreM * mg_value(psq[pc][to] - psq[pc][from]) / 4;
+        scoreM * mg_value(color_of(pc) == WHITE ? (psq[pc][to] - psq[pc][from]) : (psq[pc][from] - psq[pc][to])) / 4;
   }
 }
 
