@@ -27,6 +27,8 @@
 #include "types.h"
 
 
+extern Score psq[PIECE_NB][SQUARE_NB];
+
 /// The checkInfo struct is initialized at c'tor time and keeps info used
 /// to detect if a move gives check.
 class Position;

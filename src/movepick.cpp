@@ -190,11 +190,10 @@ void MovePicker::score<QUIETS>() {
   for (ExtMove* it = moves; it != end; ++it)
   {
       m = it->move;
-      Piece p = pos.moved_piece(m);
-      PieceType pt = type_of(p);
-      Color us = color_of(p);
-      it->value = history[pos.moved_piece(m)][to_sq(m)] +
-        scoreM * mg_value(PSQT[pt][relative_square(us, to_sq(m))] - PSQT[pt][relative_square(us, from_sq(m))]) / 4;
+      Piece pc = pos.moved_piece(m);
+      Square from = from_sq(m), to = to_sq(m);
+      it->value = history[pc][to] +
+        scoreM * mg_value(psq[pc][to] - psq[pc][from]) / 4;
   }
 }
 
