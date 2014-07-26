@@ -544,11 +544,11 @@ namespace {
 
     Bitboard squaresToQueen, defendedSquares, unsafeSquares;
     Score score = SCORE_ZERO;
+    Square s;
 
-    const Square *pl = ei.pi->passed_pawns(Us);
-    while (*pl != SQ_NONE)
+    const Square *pl = ei.pi->passed_pawns_list(Us);
+    while ((s = *pl++) != SQ_NONE)
     {
-        Square s = *pl++;
         assert(pos.pawn_passed(Us, s));
 
         int r = relative_rank(Us, s) - RANK_2;
@@ -623,7 +623,7 @@ namespace {
 
   Score evaluate_unstoppable_pawns(Color us, const EvalInfo& ei) {
 
-    bool b = ei.pi->passed_pawns(us)[0] != SQ_NONE || ei.pi->candidate_pawns(us);
+    Bitboard b = ei.pi->passed_pawns(us) | ei.pi->candidate_pawns(us);
 
     return b ? Unstoppable * int(relative_rank(us, frontmost_sq(us, b))) : SCORE_ZERO;
   }
