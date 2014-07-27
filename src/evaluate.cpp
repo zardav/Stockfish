@@ -534,7 +534,7 @@ namespace {
     return score;
   }
 
-
+  int mr = 0, er = 0;
   // evaluate_passed_pawns() evaluates the passed pawns of the given color
 
   template<Color Us, bool Trace>
@@ -558,6 +558,9 @@ namespace {
 
         // Base bonus based on rank
         Value mbonus = Value(17 * rr), ebonus = Value(7 * (rr + r + 1));
+
+        if (ei.pi->passed_pawns(Us) & (s + DELTA_W))
+            mbonus += 2 * rr + mr * r, ebonus += 2 * rr + er * r; 
 
         if (rr)
         {
@@ -891,6 +894,11 @@ namespace Eval {
         t = int(std::min(Peak, std::min(0.4 * i * i, t + MaxSlope)));
         KingDanger[i] = apply_weight(make_score(t, 0), Weights[KingSafety]);
     }
+  }
+
+  void init_tuning() {
+      mr = Options["mr"];
+      er = Options["er"];
   }
 
 } // namespace Eval
