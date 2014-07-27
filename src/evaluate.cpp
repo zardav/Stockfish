@@ -141,9 +141,9 @@ namespace {
 
   const Score Passed[RANK_NB] = {
     S(  0,  0), S(  0,   7), S(  0,  14), S(34, 35),
-    S(102, 70), S(204, 119), S(340, 182), S( 0,  0)
+    S(102, 70), S(236, 90), S(178, 172), S( 0,  0)
   };
-  const int RankFactor[RANK_NB] = {0, 0, 0, 2, 6, 12, 20, 0};
+  const int RankFactor[RANK_NB] = {0, 0, 0, 2, 7, 13, 18, 0};
 
   // Threat[attacking][attacked] contains bonuses according to which piece
   // type attacks which one.
@@ -611,7 +611,7 @@ namespace {
                 mbonus += k * rr, ebonus += k * rr;
             }
            else if(pos.pieces(Us) & blockSq)
-                mbonus += rr * 3 + rank * 2 + 1, ebonus += rr + rank * 2 - 2;
+                mbonus += rr * 5 + rank * 7, ebonus += rr + rank * 2;
         } // rr != 0
 
         if (pos.count<PAWN>(Us) < pos.count<PAWN>(Them))
