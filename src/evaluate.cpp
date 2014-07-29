@@ -564,8 +564,9 @@ namespace {
             Square blockSq = s + pawn_push(Us), captureSq = make_square(file_of(s), relative_rank(Us, RANK_8));
 
             // Adjust bonus based on the king's proximity
-            ebonus +=  square_distance(pos.king_square(Them), captureSq) * 5 * rr
-                     - square_distance(pos.king_square(Us  ), captureSq) * 2 * rr;
+            ebonus +=  square_distance(pos.king_square(Them), blockSq  ) * 5 * rr
+                     - square_distance(pos.king_square(Us  ), blockSq  ) * 2 * rr
+                     - square_distance(pos.king_square(Us  ), captureSq)     * rr;
 
             // If the pawn is free to advance, then increase the bonus
             if (pos.empty(blockSq))
