@@ -609,6 +609,9 @@ namespace {
         if (pos.count<PAWN>(Us) < pos.count<PAWN>(Them))
             ebonus += ebonus / 4;
 
+        if (ei.pi->passed_pawns(Us) & (shift_bb<DELTA_W>(SquareBB[s])))
+            mbonus += mbonus / 2, ebonus += ebonus / 2;
+
         score += make_score(mbonus, ebonus);
     }
 
