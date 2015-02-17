@@ -156,34 +156,38 @@ namespace {
   // ThreatenedByPawn[PieceType] contains a penalty according to which piece
   // type is attacked by an enemy pawn.
   const Score ThreatenedByPawn[] = {
-    S(0, 0), S(0, 0), S(80, 119), S(80, 119), S(117, 199), S(127, 218)
+	  S(0, 0), S(0, 0), S(87, 118), S(84, 122), S(114, 203), S(121, 217)
   };
 
-  // Hanging contains a bonus for each enemy hanging piece
-  const Score Hanging = S(23, 20);
-
-  #undef S
-
-  const Score RookOnPawn       = make_score(10, 28);
-  const Score RookOpenFile     = make_score(43, 21);
-  const Score RookSemiopenFile = make_score(19, 10);
-  const Score BishopPawns      = make_score( 8, 12);
-  const Score MinorBehindPawn  = make_score(16,  0);
-  const Score TrappedRook      = make_score(92,  0);
-  const Score Unstoppable      = make_score( 0, 20);
+  // Assorted bonuses and penalties used by evaluation
+  const Score KingOnOne = S(2, 58);
+  const Score KingOnMany = S(6, 125);
+  const Score RookOnPawn = S(7, 27);
+  const Score RookOnOpenFile = S(43, 21);
+  const Score RookOnSemiOpenFile = S(19, 10);
+  const Score BishopPawns = S(8, 12);
+  const Score MinorBehindPawn = S(16, 0);
+  const Score TrappedRook = S(92, 0);
+  const Score Unstoppable = S(0, 20);
+  const Score Hanging = S(31, 26);
+  const Score PawnAttackThreat = S(20, 20);
+  const Score PawnSafePush = S(5, 5);
 
   // Penalty for a bishop on a1/h1 (a8/h8 for black) which is trapped by
   // a friendly pawn on b2/g2 (b7/g7 for black). This can obviously only
   // happen in Chess960 games.
-  const Score TrappedBishopA1H1 = make_score(50, 50);
+  const Score TrappedBishopA1H1 = S(50, 50);
+
+#undef S
+#undef V
 
   // SpaceMask[Color] contains the area of the board which is considered
   // by the space evaluation. In the middlegame, each side is given a bonus
   // based on how many squares inside this area are safe and available for
   // friendly minor pieces.
   const Bitboard SpaceMask[] = {
-    (FileCBB | FileDBB | FileEBB | FileFBB) & (Rank2BB | Rank3BB | Rank4BB),
-    (FileCBB | FileDBB | FileEBB | FileFBB) & (Rank7BB | Rank6BB | Rank5BB)
+	  (FileCBB | FileDBB | FileEBB | FileFBB) & (Rank2BB | Rank3BB | Rank4BB),
+	  (FileCBB | FileDBB | FileEBB | FileFBB) & (Rank7BB | Rank6BB | Rank5BB)
   };
 
   // King danger constants and variables. The king danger scores are looked-up
