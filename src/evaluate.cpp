@@ -136,7 +136,6 @@ namespace {
     V(0), V(5), V(8), V(8), V(8), V(8), V(5), V(0) }
   };
 
-<<<<<<< HEAD
   // Passed and RankFactor arrays are for passed pawns evaluating value
 
   const Score Passed[RANK_NB] = {
@@ -150,7 +149,8 @@ namespace {
   const Score Threat[][PIECE_TYPE_NB] = {
     { S(0, 0), S( 7, 39), S(24, 49), S(24, 49), S(41,100), S(41,100) }, // Minor
     { S(0, 0), S(15, 39), S(15, 45), S(15, 45), S(15, 45), S(24, 49) }  // Major
-=======
+  };
+  
   // Threat[defended/weak][minor/major attacking][attacked PieceType] contains
   // bonuses according to which piece type attacks which one.
   const Score Threat[][2][PIECE_TYPE_NB] = {
@@ -158,7 +158,6 @@ namespace {
     { S(0, 0), S( 0, 0), S( 9, 14), S( 9, 14), S( 7, 14), S(24, 48) } }, // Defended Major
   { { S(0, 0), S( 0,32), S(33, 41), S(31, 50), S(41,100), S(35,104) },   // Weak Minor
     { S(0, 0), S( 0,27), S(26, 57), S(26, 57), S(0 , 43), S(23, 51) } }  // Weak Major
->>>>>>> master
   };
 
   // ThreatenedByPawn[PieceType] contains a penalty according to which piece
