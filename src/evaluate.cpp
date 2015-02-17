@@ -143,13 +143,6 @@ namespace {
     S(102, 70), S(236, 90), S(178, 172), S( 0,  0)
   };
   const int RankFactor[RANK_NB] = {0, 0, 0, 2, 7, 13, 18, 0};
-
-  // Threat[attacking][attacked] contains bonuses according to which piece
-  // type attacks which one.
-  const Score Threat[][PIECE_TYPE_NB] = {
-    { S(0, 0), S( 7, 39), S(24, 49), S(24, 49), S(41,100), S(41,100) }, // Minor
-    { S(0, 0), S(15, 39), S(15, 45), S(15, 45), S(15, 45), S(24, 49) }  // Major
-  };
   
   // Threat[defended/weak][minor/major attacking][attacked PieceType] contains
   // bonuses according to which piece type attacks which one.
