@@ -645,13 +645,8 @@ namespace {
 
                 mbonus += k * rr, ebonus += k * rr;
             }
-<<<<<<< HEAD
            else if(pos.pieces(Us) & blockSq)
                 mbonus += rr * 3 + rank * 2 + 1, ebonus += rr + rank * 2 - 2;
-=======
-            else if (pos.pieces(Us) & blockSq)
-                mbonus += rr * 3 + r * 2 + 3, ebonus += rr + r * 2;
->>>>>>> master
         } // rr != 0
 
         if (pos.count<PAWN>(Us) < pos.count<PAWN>(Them))
