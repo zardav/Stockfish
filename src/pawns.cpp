@@ -112,7 +112,7 @@ namespace {
 
     Bitboard b, p, doubled, connected;
     Square s;
-    bool passed, isolated, opposed, phalanx, backward, unsupported, lever;
+    bool passed, isolated, opposed, phalanx, backward, unsupported, lever, supporter;
     Score score = SCORE_ZERO;
     const Square* pl = pos.list<PAWN>(Us);
     const Bitboard* pawnAttacksBB = StepAttacksBB[make_piece(Us, PAWN)];
@@ -145,6 +145,7 @@ namespace {
         connected   =   ourPawns   & adjacent_files_bb(f) & (rank_bb(s) | p);
         phalanx     =   connected  & rank_bb(s);
         unsupported = !(ourPawns   & adjacent_files_bb(f) & p);
+		supporter   = ourPawns     & pawnAttacksBB[s];
         isolated    = !(ourPawns   & adjacent_files_bb(f));
         doubled     =   ourPawns   & forward_bb(Us, s);
         opposed     =   theirPawns & forward_bb(Us, s);
@@ -187,8 +188,8 @@ namespace {
         if (unsupported && !isolated)
             score -= UnsupportedPawnPenalty;
 
-        if (doubled)
-            score -= Doubled[f] / distance<Rank>(s, frontmost_sq(Us, doubled));
+		if (doubled && !lever && !supporter)
+			score -= Doubled[f] / distance<Rank>(s, frontmost_sq(Us, doubled));
 
         if (backward)
             score -= Backward[opposed][f];
