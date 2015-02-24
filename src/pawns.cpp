@@ -25,6 +25,7 @@
 #include "pawns.h"
 #include "position.h"
 #include "thread.h"
+#include "uci.h"
 
 namespace {
 
@@ -32,7 +33,7 @@ namespace {
   #define S(mg, eg) make_score(mg, eg)
 
   // Doubled pawn penalty by file
-  const Score Doubled[FILE_NB] = {
+  Score Doubled[FILE_NB] = {
     S(13, 43), S(20, 48), S(23, 48), S(23, 48),
     S(23, 48), S(23, 48), S(20, 48), S(13, 43) };
 
@@ -230,6 +231,10 @@ void init()
               bonus >>= opposed;
               Connected[opposed][phalanx][r] = make_score( 3 * bonus / 2, bonus);
           }
+  Doubled[0] = Doubled[7] = make_score(Options["mgA"], Options["egA"]);
+  Doubled[1] = Doubled[6] = make_score(Options["mgB"], Options["egB"]);
+  Doubled[2] = Doubled[5] = make_score(Options["mgC"], Options["egC"]);
+  Doubled[3] = Doubled[4] = make_score(Options["mgD"], Options["egD"]);
 }
 
 
