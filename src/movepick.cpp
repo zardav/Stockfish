@@ -22,6 +22,7 @@
 
 #include "movepick.h"
 #include "thread.h"
+#include "psqtab.h"
 
 namespace {
 
@@ -171,13 +172,19 @@ void MovePicker::score<CAPTURES>() {
 template<>
 void MovePicker::score<QUIETS>() {
 
-  Move m;
+	Move m;
+	Square to, from;
+	Piece p;
+	const Color Us = pos.side_to_move();
 
-  for (ExtMove* it = moves; it != end; ++it)
-  {
-      m = it->move;
-      it->value = history[pos.moved_piece(m)][to_sq(m)];
-  }
+	for (ExtMove* it = moves; it != end; ++it)
+	{
+		m = it->move;
+		to = relative_square(Us, to_sq(m)), from = relative_square(Us, from_sq(m));
+		p = pos.moved_piece(m);
+		it->value = history[p][to_sq(m)] * 4 +
+			(PSQT[p][to] - PSQT[p][from]);
+	}
 }
 
 template<>
