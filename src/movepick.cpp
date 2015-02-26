@@ -22,6 +22,7 @@
 
 #include "movepick.h"
 #include "thread.h"
+#include "psqtab.h"
 
 namespace {
 
@@ -89,6 +90,7 @@ MovePicker::MovePicker(const Position& p, Move ttm, Depth d, const HistoryStats&
 
   ttMove = (ttm && pos.pseudo_legal(ttm) ? ttm : MOVE_NONE);
   end += (ttMove != MOVE_NONE);
+  phase = pos.game_phase();
 }
 
 MovePicker::MovePicker(const Position& p, Move ttm, Depth d, const HistoryStats& h,
@@ -114,6 +116,7 @@ MovePicker::MovePicker(const Position& p, Move ttm, Depth d, const HistoryStats&
 
   ttMove = (ttm && pos.pseudo_legal(ttm) ? ttm : MOVE_NONE);
   end += (ttMove != MOVE_NONE);
+  phase = pos.game_phase();
 }
 
 MovePicker::MovePicker(const Position& p, Move ttm, const HistoryStats& h, PieceType pt)
@@ -132,6 +135,7 @@ MovePicker::MovePicker(const Position& p, Move ttm, const HistoryStats& h, Piece
       ttMove = MOVE_NONE;
 
   end += (ttMove != MOVE_NONE);
+  phase = pos.game_phase();
 }
 
 
@@ -171,13 +175,19 @@ void MovePicker::score<CAPTURES>() {
 template<>
 void MovePicker::score<QUIETS>() {
 
-  Move m;
+	Move m;
+	Square to, from;
+	Piece p;
+	const Color Us = pos.side_to_move();
 
-  for (ExtMove* it = moves; it != end; ++it)
-  {
-      m = it->move;
-      it->value = history[pos.moved_piece(m)][to_sq(m)];
-  }
+	for (ExtMove* it = moves; it != end; ++it)
+	{
+		m = it->move;
+		to = relative_square(Us, to_sq(m)), from = relative_square(Us, from_sq(m));
+		p = pos.moved_piece(m);
+		it->value = history[p][to_sq(m)] +
+			score_value(PSQT[p][to] - PSQT[p][from]) * 11 / 16;
+	}
 }
 
 template<>
@@ -383,3 +393,7 @@ Move MovePicker::next_move<false>() {
 /// safe so must be lock protected by the caller.
 template<>
 Move MovePicker::next_move<true>() { return ss->splitPoint->movePicker->next_move<false>(); }
+
+Value MovePicker::score_value(Score s) {
+  return Value(mg_value(s) * phase + (PHASE_MIDGAME - phase) * eg_value(s) / PHASE_MIDGAME);
+}

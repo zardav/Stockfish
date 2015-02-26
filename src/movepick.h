@@ -93,6 +93,7 @@ public:
 private:
   template<GenType> void score();
   void generate_next_stage();
+  Value score_value(Score s);
 
   const Position& pos;
   const HistoryStats& history;
@@ -107,6 +108,7 @@ private:
   int stage;
   ExtMove *cur, *end, *endQuiets, *endBadCaptures;
   ExtMove moves[MAX_MOVES];
+  Phase phase;
 };
 
 #endif // #ifndef MOVEPICK_H_INCLUDED
