@@ -23,6 +23,7 @@
 #include "movepick.h"
 #include "thread.h"
 #include "psqtab.h"
+#include "uci.h"
 
 namespace {
 
@@ -90,6 +91,7 @@ MovePicker::MovePicker(const Position& p, Move ttm, Depth d, const HistoryStats&
 
   ttMove = (ttm && pos.pseudo_legal(ttm) ? ttm : MOVE_NONE);
   end += (ttMove != MOVE_NONE);
+  phase = p.game_phase();
 }
 
 MovePicker::MovePicker(const Position& p, Move ttm, Depth d, const HistoryStats& h,
@@ -115,6 +117,7 @@ MovePicker::MovePicker(const Position& p, Move ttm, Depth d, const HistoryStats&
 
   ttMove = (ttm && pos.pseudo_legal(ttm) ? ttm : MOVE_NONE);
   end += (ttMove != MOVE_NONE);
+  phase = p.game_phase();
 }
 
 MovePicker::MovePicker(const Position& p, Move ttm, const HistoryStats& h, PieceType pt)
@@ -133,6 +136,7 @@ MovePicker::MovePicker(const Position& p, Move ttm, const HistoryStats& h, Piece
       ttMove = MOVE_NONE;
 
   end += (ttMove != MOVE_NONE);
+  phase = p.game_phase();
 }
 
 
@@ -169,6 +173,13 @@ void MovePicker::score<CAPTURES>() {
   }
 }
 
+int psqtOrderF = 0;
+void init_tuning() {
+	psqtOrderF = Options["psqtOrderF"];
+}
+int calcScore(Score s, Phase phase){
+	return (mg_value(s) * int(phase) + eg_value(s) * int(PHASE_MIDGAME - phase)) / int(PHASE_MIDGAME);
+}
 template<>
 void MovePicker::score<QUIETS>() {
 
@@ -183,7 +194,7 @@ void MovePicker::score<QUIETS>() {
 		to = relative_square(Us, to_sq(m)), from = relative_square(Us, from_sq(m));
 		p = pos.moved_piece(m);
 		it->value = history[p][to_sq(m)] +
-			mg_value(PSQT[p][to] - PSQT[p][from]) / 4;
+			psqtOrderF * calcScore(PSQT[p][to] - PSQT[p][from], phase) / 16;
 	}
 }
 
@@ -208,7 +219,6 @@ void MovePicker::score<EVASIONS>() {
           it->value = history[pos.moved_piece(m)][to_sq(m)];
   }
 }
-
 
 /// generate_next_stage() generates, scores and sorts the next bunch of moves,
 /// when there are no more moves to try for the current stage.

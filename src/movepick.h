@@ -107,6 +107,7 @@ private:
   int stage;
   ExtMove *cur, *end, *endQuiets, *endBadCaptures;
   ExtMove moves[MAX_MOVES];
+  Phase phase;
 };
 
 #endif // #ifndef MOVEPICK_H_INCLUDED

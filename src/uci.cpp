@@ -32,6 +32,7 @@
 using namespace std;
 
 extern void benchmark(const Position& pos, istream& is);
+extern void init_tuning();
 
 namespace {
 
@@ -179,7 +180,7 @@ void UCI::loop(int argc, char* argv[]) {
                     << "\nuciok"  << sync_endl;
 
       else if (token == "isready")    sync_cout << "readyok" << sync_endl;
-      else if (token == "ucinewgame") TT.clear();
+	  else if (token == "ucinewgame") { TT.clear(); init_tuning(); }
       else if (token == "go")         go(pos, is);
       else if (token == "position")   position(pos, is);
       else if (token == "setoption")  setoption(is);
