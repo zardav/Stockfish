@@ -395,5 +395,5 @@ template<>
 Move MovePicker::next_move<true>() { return ss->splitPoint->movePicker->next_move<false>(); }
 
 Value MovePicker::score_value(Score s) {
-  return Value(mg_value(s) * phase + (PHASE_MIDGAME - phase) * eg_value(s) / PHASE_MIDGAME);
+  return Value((mg_value(s) * phase + (PHASE_MIDGAME - phase) * eg_value(s)) / PHASE_MIDGAME);
 }
