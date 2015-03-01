@@ -183,7 +183,7 @@ void MovePicker::score<QUIETS>() {
 		to = relative_square(Us, to_sq(m)), from = relative_square(Us, from_sq(m));
 		p = pos.moved_piece(m);
 		it->value = history[p][to_sq(m)] +
-			mg_value(PSQT[p][to] - PSQT[p][from]) * 3 / 16;
+			mg_value(PSQT[type_of(p)][to] - PSQT[type_of(p)][from]) * 3 / 16;
 	}
 }
 
